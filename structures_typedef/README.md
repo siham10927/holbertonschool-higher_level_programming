@@ -1,0 +1,2 @@
+structures_typedef
+
