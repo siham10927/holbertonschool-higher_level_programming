@@ -1,16 +1,20 @@
 #!/usr/bin/python3
 """
-subclass from List base class
+A module to prints a list in ascending order
 """
 
 
 class MyList(list):
-    """a subclass of list base class"""
-    def __init__(self):
-        """object constructor"""
-        super().__init__()
-        """Access the methods of the Base class"""
+    """
+    A class to customize the list class
+    """
 
     def print_sorted(self):
-        """print_sorted method"""
-        print(sorted(self))
+        """
+        Prints a list in ascending order
+
+        Sort a list and then prints on the output
+        """
+
+        if issubclass(MyList, list):
+            print(sorted(self))
