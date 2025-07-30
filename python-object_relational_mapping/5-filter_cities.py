@@ -1,22 +1,33 @@
 #!/usr/bin/python3
-"""0x0F. Python - Object-relational mapping - task 5. All cities by state"""
-
-if __name__ == '__main__':
-    import sys
-    import MySQLdb
-
-    if len(sys.argv) != 5:
-        sys.exit('Use: 5-filter_cities.py <mysql username> <mysql password>'
-                 ' <database name> <state name>')
-
-    conn = MySQLdb.connect(host='localhost', port=3306, user=sys.argv[1],
-                           passwd=sys.argv[2], db=sys.argv[3], charset='utf8')
-    cur = conn.cursor()
-    cur.execute("SELECT cities.name FROM cities LEFT JOIN states "
-                "ON cities.state_id = states.id WHERE states.name = %s "
-                "ORDER BY cities.id ASC", (sys.argv[4], ))
-    query_rows = cur.fetchall()
-    cities = [row[0] for row in query_rows]
-    print(', '.join(cities))
+"""List all cities of a given state (safe from SQL injection)"""
+import MySQLdb
+import sys
+def list_cities():
+    # Get command-line arguments
+    username, password, db_name, state_name = sys.argv[1:5]
+    # Connect to MySQL server
+    db = MySQLdb.connect
+    (host="localhost",
+            port=3306,
+    user=username,
+    passwd=password,
+    db=db_name)
+    # Create a cursor object
+    cur = db.cursor()
+    # Use parameterized query to avoid SQL injection
+    query = """
+        SELECT cities.name FROM cities
+        JOIN states ON cities.state_id = states.id
+        WHERE states.name = %s
+        ORDER BY cities.id ASC;
+    """
+    cur.execute(query, (state_name,))
+    # Fetch all matching rows
+    cities = cur.fetchall()
+    # Print city names as a comma-separated string
+    print(", ".join([city[0] for city in cities]))
+    # Clean up
     cur.close()
-    conn.close()
+    db.close()
+    if __name__ == "__main__":
+         list_cities()
